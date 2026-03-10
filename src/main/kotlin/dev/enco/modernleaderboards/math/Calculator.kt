@@ -1,6 +1,6 @@
-package dev.enco.greataligner.math
+package dev.enco.modernleaderboards.math
 
-import dev.enco.greataligner.repository.CharRepository
+import dev.enco.modernleaderboards.repository.CharRepository
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 
 object Calculator {

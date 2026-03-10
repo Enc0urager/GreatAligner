@@ -1,7 +1,7 @@
-package dev.enco.greataligner
+package dev.enco.modernleaderboards
 
-import dev.enco.greataligner.config.Config
-import dev.enco.greataligner.repository.CooldownRepository
+import dev.enco.modernleaderboards.config.Config
+import dev.enco.modernleaderboards.repository.CooldownRepository
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemHeldEvent

@@ -1,4 +1,4 @@
-package dev.enco.greataligner.repository
+package dev.enco.modernleaderboards.repository
 
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap
 

@@ -1,9 +1,9 @@
-package dev.enco.greataligner
+package dev.enco.modernleaderboards
 
-import dev.enco.greataligner.command.ReloadCommand
-import dev.enco.greataligner.config.Config
-import dev.enco.greataligner.papi.PapiExpansion
-import dev.enco.greataligner.repository.CooldownRepository
+import dev.enco.modernleaderboards.command.ReloadCommand
+import dev.enco.modernleaderboards.config.Config
+import dev.enco.modernleaderboards.papi.PapiExpansion
+import dev.enco.modernleaderboards.repository.CooldownRepository
 import org.bstats.bukkit.Metrics
 import org.bukkit.plugin.java.JavaPlugin
 

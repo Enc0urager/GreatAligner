@@ -1,6 +1,6 @@
-name: GreatAligner
+name: ModernLeaderboards
 version: '${project.version}'
-main: dev.enco.greataligner.Main
+main: dev.enco.modernleaderboards.Main
 api-version: '1.18'
 depend: [ajLeaderboards, PlaceholderAPI, FancyHolograms]
 commands:

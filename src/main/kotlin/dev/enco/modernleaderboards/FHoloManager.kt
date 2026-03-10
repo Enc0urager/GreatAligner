@@ -1,11 +1,11 @@
-package dev.enco.greataligner
+package dev.enco.modernleaderboards
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import de.oliver.fancyholograms.api.FancyHologramsPlugin
 import de.oliver.fancyholograms.api.data.TextHologramData
 import de.oliver.fancyholograms.api.hologram.Hologram
-import dev.enco.greataligner.config.Config
+import dev.enco.modernleaderboards.config.Config
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector

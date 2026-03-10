@@ -1,6 +1,6 @@
-package dev.enco.greataligner.command
+package dev.enco.modernleaderboards.command
 
-import dev.enco.greataligner.config.Config
+import dev.enco.modernleaderboards.config.Config
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

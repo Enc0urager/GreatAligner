@@ -1,10 +1,10 @@
-package dev.enco.greataligner.config
+package dev.enco.modernleaderboards.config
 
 import com.google.common.collect.ImmutableMap
-import dev.enco.greataligner.Main
-import dev.enco.greataligner.repository.CharRepository
-import dev.enco.greataligner.repository.LbRepository
-import dev.enco.greataligner.utils.Colorizer
+import dev.enco.modernleaderboards.Main
+import dev.enco.modernleaderboards.repository.CharRepository
+import dev.enco.modernleaderboards.repository.LbRepository
+import dev.enco.modernleaderboards.utils.Colorizer
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration

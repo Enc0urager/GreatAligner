@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.enco</groupId>
-    <artifactId>GreatAligner</artifactId>
+    <artifactId>ModernLeaderboards</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>GreatAligner</name>
+    <name>ModernLeaderboards</name>
 
     <properties>
         <java.version>16</java.version>
@@ -27,7 +27,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>dev.enco.greataligner.metrics</shadedPattern>
+                            <shadedPattern>dev.enco.modernleaderboards.metrics</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

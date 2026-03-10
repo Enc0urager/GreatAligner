@@ -1,4 +1,4 @@
-package dev.enco.greataligner.utils
+package dev.enco.modernleaderboards.utils
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer

@@ -1,4 +1,4 @@
-package dev.enco.greataligner
+package dev.enco.modernleaderboards
 
 import org.bukkit.util.Vector
 

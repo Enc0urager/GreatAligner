@@ -1,10 +1,10 @@
-package dev.enco.greataligner.papi
+package dev.enco.modernleaderboards.papi
 
-import dev.enco.greataligner.FHoloManager
-import dev.enco.greataligner.config.Config
-import dev.enco.greataligner.math.Calculator
-import dev.enco.greataligner.repository.LbRepository
-import dev.enco.greataligner.utils.Colorizer
+import dev.enco.modernleaderboards.FHoloManager
+import dev.enco.modernleaderboards.config.Config
+import dev.enco.modernleaderboards.math.Calculator
+import dev.enco.modernleaderboards.repository.LbRepository
+import dev.enco.modernleaderboards.utils.Colorizer
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.ChatColor

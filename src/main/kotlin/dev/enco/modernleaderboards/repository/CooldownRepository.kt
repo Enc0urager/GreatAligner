@@ -1,8 +1,8 @@
-package dev.enco.greataligner.repository
+package dev.enco.modernleaderboards.repository
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
-import dev.enco.greataligner.config.Config
+import dev.enco.modernleaderboards.config.Config
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
