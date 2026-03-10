@@ -3,7 +3,7 @@ package dev.enco.greataligner.math
 import dev.enco.greataligner.repository.CharRepository
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 
-class Calculator(private val charRepository: CharRepository) {
+object Calculator {
     val cache = Object2IntOpenHashMap<String>()
 
     fun getStringWidth(text: String?, cacheResult : Boolean): Int {
@@ -14,10 +14,7 @@ class Calculator(private val charRepository: CharRepository) {
             if (cached != -1) return cached
         }
 
-        var width = 0
-        var bold = false
-        var i = 0
-        val len = text.length
+        var width = 0; var bold = false; var i = 0; val len = text.length
 
         while (i < len) {
             val c = text[i]
@@ -30,10 +27,9 @@ class Calculator(private val charRepository: CharRepository) {
                 i += 2
                 continue
             }
-            val w = charRepository.get(c)
 
-            width += w + 1 + if (bold) 1 else 0
-            i++
+            val w = CharRepository.get(c)
+            width += w + 1 + if (bold) 1 else 0; i++
         }
 
         if (cacheResult) cache[text] = width

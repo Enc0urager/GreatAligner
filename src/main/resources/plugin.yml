@@ -1,8 +1,8 @@
 name: GreatAligner
 version: '${project.version}'
 main: dev.enco.greataligner.Main
-api-version: '1.16'
-depend: [ajLeaderboards, PlaceholderAPI]
+api-version: '1.18'
+depend: [ajLeaderboards, PlaceholderAPI, FancyHolograms]
 commands:
   greataligner:
 libraries:

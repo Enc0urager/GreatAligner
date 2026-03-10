@@ -2,7 +2,7 @@ package dev.enco.greataligner.repository
 
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap
 
-class CharRepository {
+object CharRepository {
     val char2PixelMap = Char2IntOpenHashMap().apply {
         defaultReturnValue(5)
         fun set(chars: String, width: Int) {
