@@ -23,7 +23,10 @@ class Config(
     var cacheName: Boolean = true
     var cacheValue : Boolean = false
     var cachePlace : Boolean = true
-    lateinit var holo2LbMap: Map<String, String>
+    val holo2LbMap: HashMap<String, String> = HashMap()
+    var cooldown: Long = 10000
+    var maxOffset: Int = 40
+    var offsetCacheExpireTime: Long = 180
 
     fun getPlaceChar(place : Int) : String = customPlaceChars.getOrDefault(place, place.toString())
     fun getLbFormat(lb : String) : String? = lbFormats[lb]
@@ -54,11 +57,13 @@ class Config(
     fun getLbFromHolo(s : String) : String? = holo2LbMap[s]
 
     private fun loadScrolling(section: ConfigurationSection) {
-        val holoMap = HashMap<String, String>()
-        for (key in section.getKeys(false)) {
-            holoMap[key] = section.getString(key)!!
+        val h2LbSec = section.getConfigurationSection("applicable-holograms")!!
+        for (key in h2LbSec.getKeys(false)) {
+            holo2LbMap[key] = h2LbSec.getString(key)!!
         }
-        holo2LbMap = holoMap
+        cooldown = section.getLong("cooldown")
+        maxOffset = section.getInt("max-offset")
+        offsetCacheExpireTime = section.getLong("offset-cache-expire-time")
     }
 
     private fun loadLbFormats(section: ConfigurationSection): ImmutableMap<String, String> {

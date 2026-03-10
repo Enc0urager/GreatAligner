@@ -3,15 +3,61 @@ package dev.enco.greataligner
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import de.oliver.fancyholograms.api.FancyHologramsPlugin
+import de.oliver.fancyholograms.api.data.TextHologramData
 import de.oliver.fancyholograms.api.hologram.Hologram
+import dev.enco.greataligner.config.Config
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import org.bukkit.entity.Player
+import org.bukkit.util.Vector
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 object FHoloManager {
-    val playersCache : Cache<UUID, Object2IntOpenHashMap<String>> = Caffeine.newBuilder()
-        .expireAfterAccess(180, TimeUnit.SECONDS).build()
+    val holoHitboxes = mutableListOf<HoloHitbox>()
+    lateinit var playersCache : Cache<UUID, Object2IntOpenHashMap<String>>
+    var maxOffset: Int = 40
+
+    fun init(config: Config) {
+        playersCache = Caffeine.newBuilder()
+            .expireAfterAccess(config.offsetCacheExpireTime, TimeUnit.SECONDS).build()
+        setupHoloHitboxes(config)
+        maxOffset = config.maxOffset
+    }
+
+    fun setupHoloHitboxes(config: Config) {
+        val manager = FancyHologramsPlugin.get().hologramManager
+        config.holo2LbMap.keys.forEach { key ->
+            val holo = manager.getHologram(key).get()
+            val data = holo.data; val loc = data.location
+            var height = 1.0; var radius = 1.0
+
+            if (data is TextHologramData) {
+                val lines = data.text.size.coerceAtLeast(1)
+                height = lines * 0.3 * data.scale.y
+                val longestLine = data.text
+                    .map { line -> strip(line) }
+                    .maxByOrNull { it.length }?.length ?: 1
+                radius = longestLine * 0.15 * data.scale.x / 2
+            }
+
+            val halfHeight = height / 2.0
+            val center = loc.clone().toVector().add(Vector(0.0, height / 2.0, 0.0))
+
+            holoHitboxes.add(HoloHitbox(
+                center,
+                halfHeight,
+                radius * radius,
+                key
+            ))
+        }
+    }
+
+    private fun strip(line: String): String =
+        line.replace(Regex("<[^>]*>"), "")
+            .replace(Regex("&#[A-Fa-f0-9]{6}"), "")
+            .replace(Regex("[&§][0-9a-fk-orA-FK-OR]"), "")
+            .replace(Regex("%[^%]*%"), "")
 
     private fun map(uuid: UUID) =
         playersCache.get(uuid) { Object2IntOpenHashMap() }
@@ -23,87 +69,42 @@ object FHoloManager {
         val direction = if ((to - from + 9) % 9 == 1) 1 else -1
         val offsets = map(uuid)
         val next = (offsets.getOrDefault(lb, 0) + direction)
-            .coerceIn(0, 40)
+            .coerceIn(0, maxOffset)
         offsets[lb] = next; return next
     }
 
     fun getLookingHolo(player: Player, maxDistance: Double = 5.0): Hologram? {
-        val hologramManager = FancyHologramsPlugin.get().hologramManager
         val eyeLoc = player.eyeLocation
         val origin = eyeLoc.toVector()
         val direction = eyeLoc.direction
 
-        var closestHolo: Hologram? = null
+        var closestHoloName: String? = null
         var minDistance = Double.MAX_VALUE
 
-        // CURRENT TEMPORARY IMPLEMENTATION: Mathematical Raycasting
-        // Currently simulating a circular "hitbox" around the hologram's config location
-        // This works, but it's a dirty workaround. It forces server admins
-        // to manually configure hitbox sizes for each hologram in the config.
-        val hitRadiusSq = 1.5 * 1.5
-
-        for (hologram in hologramManager.holograms) {
-            val holoLoc = hologram.data.location
-            val holoVec = holoLoc.toVector()
-
-            val toHolo = holoVec.clone().subtract(origin)
+        for (hitbox in holoHitboxes) {
+            val toHolo = hitbox.center.clone().subtract(origin)
             val distanceAlongRay = toHolo.dot(direction)
+
             if (distanceAlongRay !in 0.0..maxDistance) continue
 
             val pointOnRay = origin.clone().add(direction.clone().multiply(distanceAlongRay))
-            val distSqToCenter = pointOnRay.distanceSquared(holoVec)
 
-            if (distSqToCenter <= hitRadiusSq && distanceAlongRay < minDistance) {
-                minDistance = distanceAlongRay
-                closestHolo = hologram
+            val dy = abs(pointOnRay.y - hitbox.center.y)
+            if (dy > hitbox.halfHeight) continue
+
+            val dx = pointOnRay.x - hitbox.center.x
+            val dz = pointOnRay.z - hitbox.center.z
+            val horizontalDistSq = (dx * dx) + (dz * dz)
+
+            if (horizontalDistSq <= hitbox.radiusSq) {
+                if (distanceAlongRay < minDistance) {
+                    minDistance = distanceAlongRay
+                    closestHoloName = hitbox.holo
+                }
             }
         }
 
-        return closestHolo
+        if (closestHoloName == null) return null
+        return FancyHologramsPlugin.get().hologramManager.getHologram(closestHoloName).orElse(null)
     }
-
-    /*
-    ==========================
-         FAILED ATTEMPTS
-    ==========================
-
-    ATTEMPT 1: Using hologram.displayEntity?.boundingBox
-    Reason for failure: The 'displayEntity' property is deprecated (marked for removal)
-    and always returns null in the current API version, so we can't get the bounding box this way.
-
-    fun getLookingHolo(player: Player, maxDistance: Double = 5.0): Hologram? {
-        val hologramManager = FancyHologramsPlugin.get().hologramManager
-        val eyeLoc = player.eyeLocation
-        val start = eyeLoc.toVector()
-        val direction = eyeLoc.direction
-
-        return hologramManager.holograms.firstOrNull { hologram ->
-            val box = hologram.displayEntity?.boundingBox ?: return@firstOrNull false
-            box.rayTrace(start, direction, maxDistance) != null
-        }
-    }
-
-    ---------------------------------------------------------------------------
-
-    ATTEMPT 2: Using Bukkit's built-in rayTraceEntities
-    Reason for failure: FancyHolograms are client-side only (spawned via packets).
-    They do not exist as standard Bukkit entities on the server, so the server's
-    rayTrace calculation completely ignores them.
-
-    fun getLookingHolo(player: Player): Hologram? {
-        val rayTrace = player.world.rayTraceEntities(
-            player.eyeLocation,
-            player.eyeLocation.direction,
-            5.0
-        ) { entity -> entity is Interaction || entity is Display } ?: return null
-
-        val hitEntity = rayTrace.hitEntity ?: return null
-
-        val hologramManager = FancyHologramsPlugin.get().hologramManager
-
-        return hologramManager.holograms.firstOrNull { hologram ->
-            hologram.entityId == hitEntity.entityId
-        }
-    }
-    */
 }
