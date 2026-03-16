@@ -7,3 +7,4 @@ commands:
   greataligner:
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin.version}
+  - com.github.ben-manes.caffeine:caffeine:3.2.2

@@ -2,6 +2,7 @@ package dev.enco.modernleaderboards.math
 
 import dev.enco.modernleaderboards.repository.CharRepository
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import java.util.regex.Pattern
 
 object Calculator {
     val cache = Object2IntOpenHashMap<String>()
@@ -21,6 +22,7 @@ object Calculator {
 
             if ((c == '§' || c == '&') && i + 1 < len) {
                 when (text[i + 1].lowercaseChar()) {
+                    '#' -> { i += 8; continue; }
                     'l' -> bold = true
                     'r', in '0'..'9', in 'a'..'f' -> bold = false
                 }

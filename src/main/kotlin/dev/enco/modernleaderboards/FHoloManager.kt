@@ -11,6 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import kotlin.jvm.optionals.getOrElse
 import kotlin.math.abs
 
 object FHoloManager {
@@ -28,7 +29,7 @@ object FHoloManager {
     fun setupHoloHitboxes(config: Config) {
         val manager = FancyHologramsPlugin.get().hologramManager
         config.holo2LbMap.keys.forEach { key ->
-            val holo = manager.getHologram(key).get()
+            val holo = manager.getHologram(key).getOrElse { throw NullPointerException("Hologram $key not found, please setup config") }
             val data = holo.data; val loc = data.location
             var height = 1.0; var radius = 1.0
 
