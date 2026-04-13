@@ -17,6 +17,7 @@ class PapiExpansion(
     override fun getIdentifier(): String = "greataligner"
     override fun getAuthor(): String = "Encourager"
     override fun getVersion(): String = "1.0"
+    override fun canRegister(): Boolean = true;
 
     override fun onRequest(player: OfflinePlayer?, params: String): String? {
         val scrolling = params.startsWith("scrolling_")
